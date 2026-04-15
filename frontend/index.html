@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>AI Travel Agent</h2>
+
+<input id="origin" placeholder="From (JFK)">
+<input id="dest" placeholder="To (LAX)">
+<input id="date" placeholder="YYYY-MM-DD">
+
+<button onclick="search()">Search</button>
+
+<pre id="result"></pre>
+
+<script>
+async function search() {
+    const res = await fetch("/travel", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            origin: document.getElementById("origin").value,
+            destination: document.getElementById("dest").value,
+            date: document.getElementById("date").value
+        })
+    });
+
+    const data = await res.json();
+    document.getElementById("result").innerText = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>

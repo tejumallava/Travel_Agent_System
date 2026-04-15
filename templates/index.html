@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Travel AI</title>
+</head>
+<body>
+
+<h2>Travel Planner AI ✈️</h2>
+
+<input type="text" id="input" placeholder="Enter your travel plan"/>
+<button onclick="send()">Send</button>
+
+<pre id="output"></pre>
+
+<script>
+async function send() {
+    const message = document.getElementById("input").value;
+
+    const response = await fetch("/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ message })
+    });
+
+    const data = await response.json();
+    document.getElementById("output").innerText = JSON.stringify(data, null, 2);
+}
+</script>
+
+</body>
+</html>
