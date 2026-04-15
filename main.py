@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import os
 
-app = FastAPI()
+app = FastAPI(title="Travel Agent API 🚀")
 
 
 # ---------------------------
@@ -13,24 +13,33 @@ class TravelQuery(BaseModel):
 
 
 # ---------------------------
-# HEALTH CHECK (IMPORTANT)
+# HEALTH CHECK
 # ---------------------------
 @app.get("/")
 def home():
-    return {"status": "Travel Agent Running 🚀"}
+    return {
+        "status": "Travel Agent Running 🚀",
+        "docs": "/docs"
+    }
 
 
 # ---------------------------
-# SAFE LAZY IMPORT WRAPPER
+# SAFE IMPORTS (lazy loading)
 # ---------------------------
 def get_parser():
-    from agents.parser_agent import parse_user_request
-    return parse_user_request
+    try:
+        from agents.parser_agent import parse_user_request
+        return parse_user_request
+    except Exception as e:
+        raise RuntimeError(f"Parser import failed: {str(e)}")
 
 
 def get_orchestrator():
-    from orchestrator.orchestrator import run_orchestrator
-    return run_orchestrator
+    try:
+        from orchestrator.orchestrator import run_orchestrator
+        return run_orchestrator
+    except Exception as e:
+        raise RuntimeError(f"Orchestrator import failed: {str(e)}")
 
 
 # ---------------------------
@@ -40,20 +49,31 @@ def get_orchestrator():
 def travel_text(request: TravelQuery):
 
     try:
+        # load functions
         parse_user_request = get_parser()
         run_orchestrator = get_orchestrator()
 
-        # 1. parse request
+        # 1. parse input
         parsed = parse_user_request(request.query)
 
+        print("DEBUG INPUT:", request.query)
+        print("DEBUG PARSED:", parsed)
+
         # 2. validation
+        if not parsed:
+            return {
+                "error": "Parser returned None/empty",
+                "input": request.query
+            }
+
         if not parsed.get("origin") or not parsed.get("destination"):
             return {
                 "error": "Missing origin or destination",
-                "parsed": parsed
+                "parsed": parsed,
+                "hint": "Fix parser_agent.py output format"
             }
 
-        # 3. run orchestrator
+        # 3. orchestrator execution
         result = run_orchestrator(parsed)
 
         return {
@@ -63,12 +83,13 @@ def travel_text(request: TravelQuery):
 
     except Exception as e:
         return {
-            "error": str(e)
+            "error": str(e),
+            "input": request.query
         }
 
 
 # ---------------------------
-# RAILWAY ENTRY POINT (IMPORTANT)
+# RAILWAY ENTRY POINT
 # ---------------------------
 if __name__ == "__main__":
     import uvicorn
@@ -78,5 +99,6 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=port
+        port=port,
+        reload=False
     )
