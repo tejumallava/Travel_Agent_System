@@ -27,3 +27,4 @@ pydub==0.25.1
 ffmpy==1.0.0
 
 python-multipart==0.0.20
+gradio==4.44.1
