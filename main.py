@@ -18,7 +18,6 @@ demo = gr.Interface(
     title="Travel AI UI"
 )
 
-# MUST be root mount
 app = gr.mount_gradio_app(app, demo, path="/")
 
 if __name__ == "__main__":

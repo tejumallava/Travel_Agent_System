@@ -1,36 +1,13 @@
-import gradio as gr
-import requests
-import os
+import streamlit as st
+from orchestrator.orchestrator import run_orchestrator
+from agents.parser_agent import parse_user_request
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
+st.title("✈️ Travel AI System")
 
+query = st.text_input("Enter travel request")
 
-def travel_ui(user_input):
-    try:
-        res = requests.post(
-            f"{API_URL}/travel-text",
-            json={"query": user_input},
-            timeout=60
-        )
-        return res.json()
-    except Exception as e:
-        return {"error": str(e)}
+if st.button("Search"):
+    parsed = parse_user_request(query)
+    result = run_orchestrator(parsed)
 
-
-demo = gr.Interface(
-    fn=travel_ui,
-    inputs=gr.Textbox(
-        label="Enter travel request",
-        placeholder="I want to go from Paris to Atlanta next week"
-    ),
-    outputs="json",
-    title="✈️ AI Travel Agent",
-    description="Enter your travel plan and get results"
-)
-
-
-if __name__ == "__main__":
-    demo.launch(
-        server_name="0.0.0.0",
-        server_port=int(os.environ.get("PORT", 7860))
-    )
+    st.write(result)
