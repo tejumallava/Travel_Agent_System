@@ -6,12 +6,15 @@ from utils.helpers import safe
 
 def run_orchestrator(parsed):
 
-    origin = safe(parsed.get("origin"), "Delhi")
-    destination = safe(parsed.get("destination"), "Dubai")
+    origin = parsed.get("origin") or "Delhi"
+    destination = parsed.get("destination") or "Dubai"
+
 
 
     if not destination:
-       destination = "Dubai"  # fallback default city
+        destination = parsed.get("origin")  # fallback 1
+    if not destination:
+        destination = "Paris"  # last fallback only    
     flights_raw = get_flights_api(origin, destination)
     flights = normalize_flights(flights_raw)
 
