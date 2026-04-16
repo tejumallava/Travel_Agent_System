@@ -7,7 +7,7 @@ load_dotenv()
 API_KEY = os.getenv("RAPIDAPI_KEY")
 HOST = os.getenv("RAPIDAPI_HOST")
 
-def get_hotels(city):
+def get_hotels_api(city):
     url = "https://booking-com.p.rapidapi.com/v1/hotels/search"
 
     headers = {
@@ -19,8 +19,10 @@ def get_hotels(city):
         "city_name": city,
         "checkin_date": "2026-04-20",
         "checkout_date": "2026-04-21",
-        "adults_number": 1
+        "adults_number": 1,
+        "room_number": 1,
+        "locale": "en-us"
     }
 
-    res = requests.get(url, headers=headers, params=params)
-    return res.json()
+    response = requests.get(url, headers=headers, params=params)
+    return response.json()
