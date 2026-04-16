@@ -6,15 +6,19 @@ load_dotenv()
 
 API_KEY = os.getenv("AVIATIONSTACK_API_KEY")
 
-def get_flights(origin, destination):
+def get_flights_api(origin=None, destination=None):
     url = "http://api.aviationstack.com/v1/flights"
 
     params = {
         "access_key": API_KEY,
-        "dep_iata": origin,
-        "arr_iata": destination,
         "limit": 5
     }
+
+    # optional filters (if API supports IATA)
+    if origin:
+        params["dep_iata"] = origin
+    if destination:
+        params["arr_iata"] = destination
 
     res = requests.get(url, params=params)
     return res.json()
