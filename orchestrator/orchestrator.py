@@ -6,8 +6,8 @@ from utils.helpers import safe
 
 def run_orchestrator(parsed):
 
-    origin = parsed.get("origin") or "Delhi"
-    destination = parsed.get("destination") or "Dubai"
+    origin = parsed.get("origin") or "Paris"
+    destination = parsed.get("destination") or "London"
 
 
 
