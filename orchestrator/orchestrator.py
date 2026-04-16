@@ -5,9 +5,12 @@ from utils.normalizer import normalize_flights
 
 def run_orchestrator(parsed):
 
-    origin = parsed.get("origin")
-    destination = parsed.get("destination")
+    origin = safe(parsed.get("origin"), "Delhi")
+    destination = safe(parsed.get("destination"), "Dubai")
 
+
+    if not destination:
+       destination = "Dubai"  # fallback default city
     flights_raw = get_flights_api(origin, destination)
     flights = normalize_flights(flights_raw)
 

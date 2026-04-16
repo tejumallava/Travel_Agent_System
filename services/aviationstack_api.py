@@ -13,9 +13,10 @@ def get_flights_api(origin=None, destination=None):
 
         params = {
             "access_key": API_KEY,
-            "limit": 5
-        }
-
+            "dep_iata": origin,
+            "arr_iata": destination,
+            "limit": 5}
+        
         if origin:
             params["dep_iata"] = origin
         if destination:
