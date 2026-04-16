@@ -2,6 +2,7 @@ from services.aviationstack_api import get_flights_api
 from services.weather_api import get_weather_api
 from services.hotel_api import get_hotels_api
 from utils.normalizer import normalize_flights
+from utils.helpers import safe
 
 def run_orchestrator(parsed):
 
