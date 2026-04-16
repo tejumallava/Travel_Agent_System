@@ -1,10 +1,4 @@
-def get_weather(data):
+from services.weather_api import get_weather_api
 
-    destination = data.get("destination")
-    date = data.get("date")
-
-    return {
-        "temperature": 25,
-        "condition": "Sunny",
-        "location": destination
-    }
+def get_weather(city):
+    return get_weather_api(city)
