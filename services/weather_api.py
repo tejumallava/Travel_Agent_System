@@ -15,21 +15,20 @@ def get_weather_api(city):
         "units": "metric"
     }
 
-    try:
-        response = requests.get(url, params=params)
-        data = response.json()
+    res = requests.get(url, params=params)
+    data = res.json()
 
+    # 🔥 SAFE CHECK (important)
+    if "main" not in data:
         return {
             "city": city,
-            "temperature": data["main"]["temp"],
-            "condition": data["weather"][0]["description"],
-            "humidity": data["main"]["humidity"]
-        }
-
-    except Exception as e:
-        return {
-            "city": city,
-            "error": str(e),
+            "error": data,
             "temperature": None,
             "condition": "unknown"
         }
+
+    return {
+        "city": city,
+        "temperature": data["main"]["temp"],
+        "condition": data["weather"][0]["description"]
+    }
