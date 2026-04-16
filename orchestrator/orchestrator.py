@@ -1,17 +1,15 @@
-from agents.requirement_agent import check_requirements
 from agents.flight_agent import get_flights
 from agents.hotel_agent import get_hotels
 from agents.weather_agent import get_weather
 
+def run_orchestrator(parsed):
 
-def run_orchestrator(data):
+    origin = parsed["origin"]
+    destination = parsed["destination"]
 
-    if not check_requirements(data):
-        return {"error": "Invalid travel request"}
-
-    flights = get_flights(data)
-    hotels = get_hotels(data)
-    weather = get_weather(data)
+    flights = get_flights(origin, destination)
+    hotels = get_hotels(destination)
+    weather = get_weather(destination)
 
     return {
         "flights": flights,
